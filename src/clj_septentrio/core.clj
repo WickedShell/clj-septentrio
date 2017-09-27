@@ -8,9 +8,21 @@
 (defn- uint16 [x] (bit-and x 0xffff))
 (defn- uint32 [x] (bit-and x 0xffffffff))
 
+(defn- Comment
+  "Decodes a Comment (5936) block"
+  [^ByteBuffer buffer]
+  (.position buffer 6)
+  (let [TOW       (uint32 (.getInt   buffer))
+        WNc       (uint16 (.getShort buffer))
+        CommentLn (uint16 (.getShort buffer))
+        Comment   (byte-array CommentLn)]
+    (System/arraycopy (.array buffer) (.position buffer) Comment 0 CommentLn)
+    {:message :ExtEventPVTGeodetic
+     :TOW TOW :WNc WNc :CommentLn CommentLn :Comment (new String Comment)}))
+
 (defn- ExtEventPVTGeodetic
   "Decodes a ExtEventPVTGeodetic (4038) block"
-  [^ByteBuffer buffer length]
+  [^ByteBuffer buffer]
   (.position buffer 6)
   (let [TOW         (uint32 (.getInt    buffer))
         WNc         (uint16 (.getShort  buffer))
@@ -43,9 +55,10 @@
 
 (defn- decode
   "Decode a given message into a map and send it out a channel"
-  [^ByteBuffer buffer length]
+  [^ByteBuffer buffer]
   (case (bit-and (.getShort buffer 2) 0x0fff)
-    4038 (ExtEventPVTGeodetic buffer length)
+    1840 (Comment buffer)
+    4038 (ExtEventPVTGeodetic buffer)
     nil
     ))
 
@@ -76,10 +89,10 @@
                        (when (= (.read input buffer 6 length) length)
                          (recur :check-crc)))
             :check-crc (let [length (- (.getShort byte-buffer 4) 8)
-                             read-crc (.getShort byte-buffer 0)
+                             read-crc (bit-and (.getShort byte-buffer 0) 0xffff)
                              computed-crc (CRC16CCITT/computeCRC buffer 2 (+ length 6))]
                          (when (= read-crc computed-crc)
-                           (when-let [message (decode byte-buffer length)]
+                           (when-let [message (decode byte-buffer)]
                              (>!! channel message)))
                          (recur :preamble1))))
     (close! channel)))
