@@ -17,7 +17,7 @@
         CommentLn (uint16 (.getShort buffer))
         Comment   (byte-array CommentLn)]
     (System/arraycopy (.array buffer) (.position buffer) Comment 0 CommentLn)
-    {:message :ExtEventPVTGeodetic
+    {:message :Comment
      :TOW TOW :WNc WNc :CommentLn CommentLn :Comment (new String Comment)}))
 
 (defn- ExtEventPVTGeodetic
