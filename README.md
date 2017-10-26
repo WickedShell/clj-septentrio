@@ -17,6 +17,7 @@ user=> (with-open [stream (io/input-stream "ASTER129.SBF")]
 | Message ID | Message Name | Notes |
 | ---------- | ------------ | ----- |
 | 4038       | ExtEventPVTGeodetic | Rev1 fields are not parsed |
+| 5936       | Comment             |  |
 
 ## License
 
