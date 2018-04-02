@@ -1,4 +1,4 @@
-(defproject clj-septentrio "0.1.0"
+(defproject clj-septentrio "0.1.1-SNAPSHOT"
   :description "Septentrio binary protocol parser"
   :url "http://github.com/wickedshell/clj-septentrio"
   :license {:name "Eclipse Public License"
