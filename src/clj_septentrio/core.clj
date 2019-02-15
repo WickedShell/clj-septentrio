@@ -1,6 +1,6 @@
 (ns clj-septentrio.core
   (:require [clojure.core.async :refer [>!! close!]])
-  (:import [CRC16CCITT]
+  (:import [clj.septentrio CRC16CCITT]
            [java.io InputStream]
            [java.nio ByteBuffer ByteOrder]))
 

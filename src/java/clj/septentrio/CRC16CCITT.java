@@ -1,4 +1,5 @@
 // CRC-CCITT 16 bit
+package clj.septentrio;
 
 public class CRC16CCITT { 
 
